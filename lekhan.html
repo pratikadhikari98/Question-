@@ -177,17 +177,21 @@
 
   .toolbar{ border-radius:var(--r-lg); padding:9px 16px; display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
   .toolbar.secondary{ padding:7px 16px; }
-  .tb-group{ display:flex; align-items:center; gap:3px; padding:0 9px; border-right:1px solid var(--border); }
+  .toolbar-stack{ border-radius:var(--r-lg); padding:8px 14px; display:flex; flex-direction:column; gap:3px; }
+  .toolbar-row{ display:flex; align-items:center; gap:4px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; min-height:34px; }
+  .toolbar-row::-webkit-scrollbar{ display:none; }
+  .toolbar-row + .toolbar-row{ padding-top:3px; border-top:1px solid var(--border); }
+  .tb-group{ display:flex; align-items:center; gap:3px; padding:0 9px; border-right:1px solid var(--border); flex-shrink:0; }
   .tb-group:last-child{ border-right:none; }
   .tb-btn{
     background:transparent; border:none; color:var(--text-1); height:32px; min-width:32px; padding:0 9px; border-radius:var(--r-pill);
-    display:flex; align-items:center; justify-content:center; gap:5px; cursor:pointer; font-size:13.5px; font-family:'Chakra Petch',sans-serif; font-weight:600; white-space:nowrap;
+    display:flex; align-items:center; justify-content:center; gap:5px; cursor:pointer; font-size:13.5px; font-family:'Chakra Petch',sans-serif; font-weight:600; white-space:nowrap; flex-shrink:0;
     transition:background-color 0.15s ease, transform 0.15s var(--ease-spring);
   }
   .tb-btn:hover{ background:var(--surface-b); transform:translateY(-1px); }
   .tb-btn.active{ background:var(--accent); color:#fff; }
   .tb-btn.narrow{ min-width:32px; padding:0; font-family:inherit; }
-  .tb-select{ background:var(--surface-b); color:var(--text-1); border:1px solid var(--border); border-radius:var(--r-pill); font-size:12.5px; padding:7px 12px; cursor:pointer; font-family:'Chakra Petch',sans-serif; font-weight:600; max-width:150px; }
+  .tb-select{ background:var(--surface-b); color:var(--text-1); border:1px solid var(--border); border-radius:var(--r-pill); font-size:12.5px; padding:7px 12px; cursor:pointer; font-family:'Chakra Petch',sans-serif; font-weight:600; max-width:150px; flex-shrink:0; }
   .tb-select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
 
   .status-row{ margin-left:auto; display:flex; align-items:center; gap:10px; font-family:'Chakra Petch',sans-serif; font-size:11.5px; font-weight:600; color:var(--text-3); }
@@ -279,6 +283,25 @@
     .sidebar.open{ transform:translateX(0); }
     .page{ padding:36px 24px 60px; }
     .menu-btn{ display:flex !important; }
+    .main{ gap:8px; }
+    .toolbar-stack{ padding:6px 10px; gap:2px; }
+    .toolbar-row{ gap:2px; min-height:30px; }
+    .toolbar .tb-group, .toolbar-row .tb-group{ padding:0 6px; }
+    .toolbar .tb-btn, .toolbar-row .tb-btn{ height:29px; min-width:29px; padding:0 7px; font-size:12px; }
+    .toolbar .tb-select, .toolbar-row .tb-select{ padding:5px 8px; font-size:11px; max-width:98px; }
+    .btn-label{ display:none; }
+    .status-row{ flex-shrink:0; gap:6px; }
+    .status-row #wordCount{ display:none; }
+    .toolbar{
+      flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
+      padding:6px 10px; gap:2px; scrollbar-width:none;
+    }
+    .toolbar::-webkit-scrollbar{ display:none; }
+    .fs-editor-head{ padding:10px 14px; gap:8px; }
+    .fs-editor-toolbar{ overflow-x:auto; -webkit-overflow-scrolling:touch; flex-wrap:nowrap; scrollbar-width:none; }
+    .fs-editor-toolbar::-webkit-scrollbar{ display:none; }
+    .toolbar.secondary{ padding:5px 10px; }
+    .vedic-btn{ width:25px; height:25px; }
   }
   .menu-btn{ display:none; }
 </style>
@@ -304,69 +327,74 @@
   </aside>
 
   <div class="main">
-    <div class="toolbar glass">
-      <button class="tb-btn menu-btn narrow" id="menuBtn" title="कागजातहरू">☰</button>
-      <div class="tb-group">
-        <select class="tb-select" id="fontSelect" title="फन्ट">
-          <option value="'Siddhanta','Chakra Petch','Noto Serif Devanagari',serif">सिद्धान्त</option>
-          <option value="'Eczar','Noto Serif Devanagari',serif">Eczar</option>
-          <option value="'Khand','Noto Serif Devanagari',sans-serif">Khand</option>
-          <option value="'Gotu','Noto Serif Devanagari',sans-serif">Gotu</option>
-          <option value="'Noto Serif Devanagari',serif">Noto Serif</option>
-        </select>
+    <div class="toolbar-stack glass">
+      <div class="toolbar-row" id="tbRow1">
+        <button class="tb-btn menu-btn narrow" id="menuBtn" title="कागजातहरू">☰</button>
+        <div class="tb-group">
+          <select class="tb-select" id="fontSelect" title="फन्ट">
+            <option value="'Siddhanta','Chakra Petch','Noto Serif Devanagari',serif">सिद्धान्त</option>
+            <option value="'Eczar','Noto Serif Devanagari',serif">Eczar</option>
+            <option value="'Khand','Noto Serif Devanagari',sans-serif">Khand</option>
+            <option value="'Gotu','Noto Serif Devanagari',sans-serif">Gotu</option>
+            <option value="'Noto Serif Devanagari',serif">Noto Serif</option>
+          </select>
+        </div>
+        <div class="tb-group">
+          <select class="tb-select" id="blockSelect" title="शैली">
+            <option value="p">सामान्य पाठ</option>
+            <option value="h1">शीर्षक १</option>
+            <option value="h2">शीर्षक २</option>
+            <option value="h3">शीर्षक ३</option>
+            <option value="blockquote">उद्धरण</option>
+          </select>
+          <select class="tb-select" id="sizeSelect" title="आकार">
+            <option value="2">सानो</option>
+            <option value="3" selected>सामान्य</option>
+            <option value="5">ठूलो</option>
+            <option value="6">धेरै ठूलो</option>
+          </select>
+        </div>
+        <div class="tb-group">
+          <button class="tb-btn narrow" data-cmd="bold" title="बोल्ड (Ctrl+B)"><b>B</b></button>
+          <button class="tb-btn narrow" data-cmd="italic" title="छड्के (Ctrl+I)"><i>I</i></button>
+          <button class="tb-btn narrow" data-cmd="underline" title="अन्डरलाइन (Ctrl+U)"><u>U</u></button>
+          <button class="tb-btn narrow" data-cmd="strikeThrough" title="स्ट्राइकथ्रु"><s>S</s></button>
+        </div>
+        <div class="tb-group">
+          <button class="tb-btn" id="hlBtn" title="सामान्य हाइलाइट">🖍️</button>
+          <button class="tb-btn" id="hlColorBtn" title="रंगीन हाइलाइट">🎨</button>
+          <button class="tb-btn" id="textColorBtn" title="रंगीन अक्षर">🖊️</button>
+          <button class="tb-btn narrow" id="clearFmtBtn" title="हाइलाइट/रंग हटाउनुहोस्">✕</button>
+        </div>
+        <div class="status-row">
+          <span id="wordCount">० शब्द</span>
+          <span class="save-dot" id="saveDot"></span>
+          <span id="saveStatus">सुरक्षित</span>
+        </div>
       </div>
-      <div class="tb-group">
-        <select class="tb-select" id="blockSelect" title="शैली">
-          <option value="p">सामान्य पाठ</option>
-          <option value="h1">शीर्षक १</option>
-          <option value="h2">शीर्षक २</option>
-          <option value="h3">शीर्षक ३</option>
-          <option value="blockquote">उद्धरण</option>
-        </select>
-        <select class="tb-select" id="sizeSelect" title="आकार">
-          <option value="2">सानो</option>
-          <option value="3" selected>सामान्य</option>
-          <option value="5">ठूलो</option>
-          <option value="6">धेरै ठूलो</option>
-        </select>
-      </div>
-      <div class="tb-group">
-        <button class="tb-btn narrow" data-cmd="bold" title="बोल्ड (Ctrl+B)"><b>B</b></button>
-        <button class="tb-btn narrow" data-cmd="italic" title="छड्के (Ctrl+I)"><i>I</i></button>
-        <button class="tb-btn narrow" data-cmd="underline" title="अन्डरलाइन (Ctrl+U)"><u>U</u></button>
-        <button class="tb-btn narrow" data-cmd="strikeThrough" title="स्ट्राइकथ्रु"><s>S</s></button>
-      </div>
-      <div class="tb-group">
-        <button class="tb-btn" id="hlBtn" title="सामान्य हाइलाइट">🖍️</button>
-        <button class="tb-btn" id="hlColorBtn" title="रंगीन हाइलाइट">🎨</button>
-        <button class="tb-btn" id="textColorBtn" title="रंगीन अक्षर">🖊️</button>
-      </div>
-      <div class="tb-group">
-        <button class="tb-btn narrow" data-cmd="justifyLeft" title="बायाँ">⯇</button>
-        <button class="tb-btn narrow" data-cmd="justifyCenter" title="बीचमा">≡</button>
-        <button class="tb-btn narrow" data-cmd="justifyRight" title="दायाँ">⯈</button>
-      </div>
-      <div class="tb-group">
-        <button class="tb-btn narrow" data-cmd="insertUnorderedList" title="बुँदा सूची">•≡</button>
-        <button class="tb-btn narrow" data-cmd="insertOrderedList" title="क्रमांकित सूची">1≡</button>
-        <button class="tb-btn narrow" id="hrBtn" title="भाग छुट्याउने रेखा">―</button>
-      </div>
-      <div class="tb-group">
-        <button class="tb-btn" id="boxBtn" title="सूचना/सुझाव बक्स">📦 बक्स</button>
-        <button class="tb-btn" id="tableBtn" title="तालिका">▦ तालिका</button>
-        <button class="tb-btn" id="imgBtn" title="फोटो">🖼️ फोटो</button>
-      </div>
-      <div class="tb-group">
-        <button class="tb-btn narrow" data-cmd="undo" title="फिर्ता (Ctrl+Z)">↺</button>
-        <button class="tb-btn narrow" data-cmd="redo" title="फेरि (Ctrl+Y)">↻</button>
-      </div>
-      <div class="tb-group">
-        <button class="tb-btn" id="fsBtn" title="पूरा स्क्रिनमा लेख्नुहोस्">⛶ पूरा स्क्रिन</button>
-      </div>
-      <div class="status-row">
-        <span id="wordCount">० शब्द</span>
-        <span class="save-dot" id="saveDot"></span>
-        <span id="saveStatus">सुरक्षित</span>
+      <div class="toolbar-row" id="tbRow2">
+        <div class="tb-group">
+          <button class="tb-btn narrow" data-cmd="justifyLeft" title="बायाँ">⯇</button>
+          <button class="tb-btn narrow" data-cmd="justifyCenter" title="बीचमा">≡</button>
+          <button class="tb-btn narrow" data-cmd="justifyRight" title="दायाँ">⯈</button>
+        </div>
+        <div class="tb-group">
+          <button class="tb-btn narrow" data-cmd="insertUnorderedList" title="बुँदा सूची">•≡</button>
+          <button class="tb-btn narrow" data-cmd="insertOrderedList" title="क्रमांकित सूची">1≡</button>
+          <button class="tb-btn narrow" id="hrBtn" title="भाग छुट्याउने रेखा">―</button>
+        </div>
+        <div class="tb-group">
+          <button class="tb-btn" id="boxBtn" title="सूचना/सुझाव बक्स">📦 <span class="btn-label">बक्स</span></button>
+          <button class="tb-btn" id="tableBtn" title="तालिका">▦ <span class="btn-label">तालिका</span></button>
+          <button class="tb-btn" id="imgBtn" title="फोटो">🖼️ <span class="btn-label">फोटो</span></button>
+        </div>
+        <div class="tb-group">
+          <button class="tb-btn narrow" data-cmd="undo" title="फिर्ता (Ctrl+Z)">↺</button>
+          <button class="tb-btn narrow" data-cmd="redo" title="फेरि (Ctrl+Y)">↻</button>
+        </div>
+        <div class="tb-group">
+          <button class="tb-btn" id="fsBtn" title="पूरा स्क्रिनमा लेख्नुहोस्">⛶ <span class="btn-label">पूरा स्क्रिन</span></button>
+        </div>
       </div>
     </div>
 
@@ -659,7 +687,64 @@
     activeEditor.focus();
     return true;
   }
+  function unwrapNode(node){
+    const parent = node.parentNode;
+    if(!parent) return;
+    while(node.firstChild) parent.insertBefore(node.firstChild, node);
+    parent.removeChild(node);
+    parent.normalize();
+  }
+  function isFormattedSpan(node){
+    return node.nodeType === 1 && node.tagName === 'SPAN' &&
+      (node.classList.contains('highlight') || node.style.color || node.style.background);
+  }
+  /* हाइलाइट/रंग हटाउने — कर्सर एउटा span भित्र मात्र भए त्यो span नै unwrap गर्ने,
+     छनोट (selection) भए त्यसभित्र/त्यससँग जोडिएका सबै रंगीन span हरू unwrap गर्ने */
+  function clearHighlightColor(){
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount === 0) return false;
+    const range = sel.getRangeAt(0);
+    let container = range.commonAncestorContainer;
+    container = container.nodeType === 3 ? container.parentNode : container;
+    if(!activeEditor.contains(container) && container !== activeEditor) return false;
+    let changed = false;
+    if(range.collapsed){
+      let node = container;
+      while(node && node !== activeEditor){
+        if(isFormattedSpan(node)){ unwrapNode(node); changed = true; break; }
+        node = node.parentNode;
+      }
+    } else {
+      const candidates = Array.from(activeEditor.querySelectorAll('span'));
+      candidates.forEach(span=>{
+        if(!activeEditor.contains(span)) return;
+        let intersects = false;
+        try{ intersects = range.intersectsNode(span); }catch(e){ intersects = false; }
+        if(intersects && isFormattedSpan(span)){ unwrapNode(span); changed = true; }
+      });
+      // कर्सर स्वयं कुनै span भित्रै मात्र भए (fully-selected single span) पनि समेट्ने
+      let anc = container;
+      while(anc && anc !== activeEditor){
+        if(isFormattedSpan(anc)){ unwrapNode(anc); changed = true; break; }
+        anc = anc.parentNode;
+      }
+    }
+    if(changed) scheduleSave();
+    activeEditor.focus();
+    return changed;
+  }
   function applyPlainHighlight(){
+    const sel = window.getSelection();
+    if(sel && sel.rangeCount && !sel.isCollapsed){
+      const range = sel.getRangeAt(0);
+      let container = range.commonAncestorContainer;
+      container = container.nodeType === 3 ? container.parentNode : container;
+      let node = container;
+      while(node && node !== activeEditor){
+        if(isFormattedSpan(node)){ clearHighlightColor(); return; }
+        node = node.parentNode;
+      }
+    }
     wrapSelection(span=>{ span.className = 'highlight'; });
     scheduleSave();
   }
@@ -713,6 +798,7 @@
   });
   document.getElementById('hrBtn').addEventListener('click', applyHR);
   document.getElementById('hlBtn').addEventListener('click', applyPlainHighlight);
+  document.getElementById('clearFmtBtn').addEventListener('click', clearHighlightColor);
   document.getElementById('tableBtn').addEventListener('click', insertTable);
   document.getElementById('imgBtn').addEventListener('click', insertImage);
 
@@ -737,6 +823,12 @@
     colorMode = mode;
     colorPopoverTitle.textContent = mode === 'highlight' ? '🎨 हाइलाइट रंग छान्नुस्' : '🖊️ अक्षरको रंग छान्नुस्';
     colorPopoverGrid.innerHTML = '';
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button'; clearBtn.className = 'swatch-btn';
+    clearBtn.innerHTML = '<span class="swatch-dot" style="background:transparent;box-shadow:inset 0 0 0 1.5px var(--text-3);position:relative;">✕</span><span class="swatch-lbl">हटाउनुहोस्</span>';
+    clearBtn.querySelector('.swatch-dot').style.cssText += 'display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-3);';
+    clearBtn.addEventListener('click', ()=>{ clearHighlightColor(); closePopover(colorPopover); });
+    colorPopoverGrid.appendChild(clearBtn);
     MD_COLORS.forEach(c=>{
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'swatch-btn';
@@ -831,6 +923,7 @@
     const tc = document.createElement('button');
     tc.type='button'; tc.id='fsTextColorBtn'; tc.className='tb-btn'; tc.title='रंगीन अक्षर'; tc.textContent='🖊️';
     tc.addEventListener('click', (e)=> openColorPopover('text', e.currentTarget)); fsToolbar.appendChild(tc);
+    mk(null,'हाइलाइट/रंग हटाउनुहोस्','✕', clearHighlightColor);
     mk(null,'ठूलो शीर्षक','H1', ()=>applyBlock('h1'));
     mk(null,'उप-शीर्षक','H2', ()=>applyBlock('h2'));
     mk(null,'उद्धरण','❝', ()=>applyBlock('blockquote'));
